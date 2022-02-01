@@ -1,0 +1,76 @@
+service: aws-pragma-ejercicio
+frameworkVersion: '2 || 3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: '20201221'
+  region: us-west-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-west-2:933621188633:table/Cliente
+
+functions:
+  hello:
+    handler: src/handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
+  createClient:
+    handler: src/routes/client/addClient.addClient
+    events:
+      - httpApi:
+          path: /client
+          method: post
+  getClients:
+    handler: src/routes/client/getClients.getClients
+    events:
+      - httpApi:
+          path: /client
+          method: get
+  getClient:
+    handler: src/routes/client/getClient.getClient
+    events:
+      - httpApi:
+          path: /client/{id}/{numId}
+          method: get
+  updateClient:
+    handler: src/routes/client/updateClient.updateClient
+    events:
+      - httpApi:
+          path: /client/{id}/{numId}
+          method: put
+  deleteClient:
+    handler: src/routes/client/deleteClient.deleteClient
+    events:
+      - httpApi:
+          path: /client/{id}/{numId}
+          method: delete
+  getByAge:
+    handler: src/routes/client/getByAge.getByAge
+    events:
+      - httpApi:
+          path: /client/{edad}
+          method: get
+
+resources:
+  Resources:
+    Cliente:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Cliente
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: numeroIdentificacion
+            AttributeType: S
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: numeroIdentificacion
+            KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
