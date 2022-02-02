@@ -19,6 +19,13 @@ const getClient = async (event) => {
 
         const client = result.Item;
 
+        if (client.numeroIdentificacion == null) {
+            return {
+                code: 400,
+                body: enums.status_codes[400]
+            }
+        }
+
         return {
             code: 200,
             body: {

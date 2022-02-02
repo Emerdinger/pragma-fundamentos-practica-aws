@@ -74,6 +74,3 @@ resources:
             KeyType: HASH
           - AttributeName: id
             KeyType: RANGE
-
-plugins:
-  - serverless-aws-documentation
